@@ -37,10 +37,10 @@ Home 972.712.2771 • Cellular 972.343.8652
 [MedAssets](http://www.medassets.com/), Plano, TX
 
 * Architect for Patient Access Solutions group including 3 feature development teams.  (2 onshore + 1 offshore)
-* Releasing online estimation tool that provides better user experience and built using AngularJS and Bootstrap.
+* Successfully released online estimation tool that provides better user experience and built using AngularJS and Bootstrap.
 * Successfully released new auto estimation feature for Patient Access Solutions.
-* Automatically generates estimate based on HL7 transaction from client patient accounting system.
-* Leverages MassTransit service bus and sagas to orchestrate various REST-based and messaging-based (RabbitMQ) micro services to gather information and generate a pdf based on custom templates.
+ * Automatically generates estimate based on HL7 transaction from client patient accounting system.
+ * Leverages MassTransit service bus and sagas to orchestrate various REST-based and messaging-based (RabbitMQ) micro services to gather information and generate a pdf based on custom templates.
 * Successfully released feature for Eligibility Portal allowing users to submit a batch of eligibility requests and view/retrieve their results.
 * Introduced acceptance test automation and behavior-driven and test-driven development to teams and wider organization utilizing tools such as Selenium, Bumblebee, SpecFlow, NUnit, FluentAssertions, and NSubstitute.
 * Introduced practices of pair programming and acceptance criteria (GIVEN/WHEN/THEN) to increase quality and better clarify requirements in user stories.
