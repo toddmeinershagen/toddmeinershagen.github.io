@@ -30,6 +30,7 @@ Home 972.712.2771 • Cellular 972.343.8652
 * [NLog.SignalrR](https://www.nuget.org/packages/NLog.SignalR/)
  * Custom NLog target for sending log events to a SignalR hub.
 
+<br>
 **EXPERIENCE**
 
 **Senior Software Architect (2012 – Present)**<br>
