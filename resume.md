@@ -1,8 +1,12 @@
-**TODD A. MEINERSHAGEN**<br>
-1850 Countryside Dr., Frisco, TX 75034<br>
-Home 972.712.2771 • Cellular 972.343.8652<br>
+**TODD A. MEINERSHAGEN**
+<br>
+1850 Countryside Dr., Frisco, TX 75034
+<br>
+Home 972.712.2771 • Cellular 972.343.8652
+<br>
 [todd@meinershagen.net](mailto:todd@meinershagen.net)
 
+<br>
 **SUMMARY OF QUALIFICATIONS**
 
 * Accomplished architect with 17+ years of in-depth, hands-on experience designing and developing service-oriented, n-tier applications to solve business problems.
@@ -14,21 +18,22 @@ Home 972.712.2771 • Cellular 972.343.8652<br>
 * Team player with a consistent history of "Far Exceeds" rating for end of year reviews.
 * "Todd is extremely hard working with a passion and dedication for his job and technology. He is unique in his ability to comprehend and adopt new technologies and techniques. Todd is a pleasure to work with and an exceptional guy to have on our team."  (John Mineau, Director of Application Development, VPI Pet Insurance)
 
+<br>
 **OPEN SOURCE PROJECTS**
 
-* Bumblebee
+* [Bumblebee](https://www.nuget.org/packages/Bumblebee.Automation/)
  * .NET layer on top of the Selenium browser automation framework allowing for standardized creation of page objects, even for dynamic web pages.
-* James.Testing
+* [James.Testing](https://github.com/QualitySoftwareMatters/James.Testing)
  * A library of test utilities named after the author who wrote the book of James in the Bible. (James 1:2-3)
-* NLog.Elmah
+* [NLog.Elmah](https://www.nuget.org/packages/NLog.Elmah/)
  * Custom NLog target for sending log events to Elmah.
-* NLog.SignalrR
+* [NLog.SignalrR](https://www.nuget.org/packages/NLog.SignalR/)
  * Custom NLog target for sending log events to a SignalR hub.
 
 **EXPERIENCE**
 
 **Senior Software Architect (2012 – Present)**<br>
-MedAssets, Plano, TX
+[MedAssets](http://www.medassets.com/), Plano, TX
 
 * Architect for Patient Access Solutions group including 3 feature development teams.  (2 onshore + 1 offshore)
 * Releasing online estimation tool that provides better user experience and built using AngularJS and Bootstrap.
