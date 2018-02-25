@@ -1,0 +1,126 @@
+---
+layout: post
+title: Creating Data-Driven Tests in MS Test
+date: 
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  blogger_blog: toddmeinershagen.blogspot.com
+  blogger_author: Todd Meinershagen
+  blogger_afd108f81ae242501ffa65d49d9298e0_permalink: '4638440554595826736'
+  _publicize_job_id: '11181715846'
+author:
+  login: tmeinershagen
+  email: todd@meinershagen.net
+  display_name: Todd Meinershagen
+  first_name: ''
+  last_name: ''
+---
+<p>For my current client, I was looking for a way to create a data-driven unit test in MSTest.  Basically, you can define a test once and then define a data source that provides multiple rows of data to be sent through the same test.  That way, you don’t have to write redundant tests.<br />I had done this previously, but I couldn’t remember how it was done.  I’m writing this post in order to remind myself and hopefully help someone out there.<br />1.  Create a Test Method<br />The first step is to make sure you have a test method.  You can do this by making sure that in your test project you have at least one class decorated with the [TestClass] attribute and a method with the [TestMethod] attribute.  
+<div class="csharpcode">
+<pre class="alt">[TestMethod]</pre>
+<pre><span class="kwrd">public</span> <span class="kwrd">void</span> Add_when_two_numbers_returns_proper_result()</pre>
+<pre class="alt">{</pre>
+<pre></pre>
+<pre class="alt">}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre { font-size: small; color: black; font-family: consolas, "Courier New", courier, monospace; background-color: #ffffff; /*white-space: pre;*/ } .csharpcode pre { margin: 0em; } .csharpcode .rem { color: #008000; } .csharpcode .kwrd { color: #0000ff; } .csharpcode .str { color: #006080; } .csharpcode .op { color: #0000c0; } .csharpcode .preproc { color: #cc6633; } .csharpcode .asp { background-color: #ffff00; } .csharpcode .html { color: #800000; } .csharpcode .attr { color: #ff0000; } .csharpcode .alt  { background-color: #f4f4f4; width: 100%; margin: 0em; } .csharpcode .lnum { color: #606060; } </p>
+<p>When creating this test class, make sure to keep the TestContext property as it is defaulted.  You will be using this when coding your test.</p>
+<p>
+<div class="csharpcode">
+<pre class="alt"><span class="kwrd">private</span> TestContext _testContext;</pre>
+<pre> </pre>
+<pre class="alt"><span class="rem">/// <summary /></span></pre>
+<pre><span class="rem">///Gets or sets the test context which provides</span></pre>
+<pre class="alt"><span class="rem">///information about and functionality for the current test run.</span></pre>
+<pre><span class="rem">///</span></pre>
+<pre class="alt"><span class="kwrd">public</span> TestContext TestContext</pre>
+<pre>{</pre>
+<pre class="alt">get</pre>
+<pre>{</pre>
+<pre class="alt"><span class="kwrd">return</span> _testContext;</pre>
+<pre>}</pre>
+<pre class="alt">set</pre>
+<pre>{</pre>
+<pre class="alt">_testContext = <span class="kwrd">value</span>;</pre>
+<pre>}</pre>
+<pre class="alt">}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre { font-size: small; color: black; font-family: consolas, "Courier New", courier, monospace; background-color: #ffffff; /*white-space: pre;*/ } .csharpcode pre { margin: 0em; } .csharpcode .rem { color: #008000; } .csharpcode .kwrd { color: #0000ff; } .csharpcode .str { color: #006080; } .csharpcode .op { color: #0000c0; } .csharpcode .preproc { color: #cc6633; } .csharpcode .asp { background-color: #ffff00; } .csharpcode .html { color: #800000; } .csharpcode .attr { color: #ff0000; } .csharpcode .alt  { background-color: #f4f4f4; width: 100%; margin: 0em; } .csharpcode .lnum { color: #606060; } </p>
+<p>2.  Add a Test Data File</p>
+<p>For the purposes of this explanation we will be using a simple .csv file (TestData.csv).  Make sure to add a text file, preferably at the root of your project with that extension.  In the file, you will want to add data.  I have added three columns per row:  Operand1, Operand2, and ExpectedValue which represents the expected result of adding the two operands together.  You can add as many rows of data to check all of the boundary conditions that express your intentions for your unit test.</p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-x3LTJMI/AAAAAAAAAzs/7WSC_pfPJEg/s1600-h/image%5B66%5D.png"><img alt="image" border="0" height="158" src="{{ site.baseurl }}/assets/image_thumb%5B38%5D.png?imgmax=800" title="image" width="410" /></a></p>
+<p>Right-click on the file and select Properties to set the Build Action to Content and the Copy to Output Directory to Copy Always as shown below.  This will ensure that the file is copied to the Bin folder when running your unit tests.</p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-yc4ZdhI/AAAAAAAAAz0/ugITp5yT1YA/s1600-h/image%5B27%5D.png"><img alt="image" border="0" height="266" src="{{ site.baseurl }}/assets/image_thumb%5B17%5D.png?imgmax=800" title="image" width="299" /></a></p>
+<p>3.  Open the Test View from the Test menu.</p>
+<p>From the Test menu, select the Windows –&gt; Test View option as shown below.</p>
+<p><a href="http://lh6.ggpht.com/_3gdMjuMkpX4/TVT-zNBhbHI/AAAAAAAAAz8/TWJvdP7Q-yA/s1600-h/image%5B4%5D.png"><img alt="image" border="0" height="345" src="{{ site.baseurl }}/assets/image_thumb%5B2%5D.png?imgmax=800" title="image" width="430" /></a></p>
+<p>Once you open the Test View, you should see a list of the test methods that are available.  When a test is highlighted, you will see the properties for that particular test in the Properties pane as shown below.  </p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-0GECXTI/AAAAAAAAA0E/DK-UYStZ4c8/s1600-h/image%5B36%5D.png"><img alt="image" border="0" height="725" src="{{ site.baseurl }}/assets/image_thumb%5B22%5D.png?imgmax=800" title="image" width="386" /></a></p>
+<p>4.  Assign Test File as Test Data Source</p>
+<p>Find the row for Data Connection String in the Properties pane and click on the button to the far right with the ellipses (…).  That should open the following dialog where you will be presented with an option to set up a database, csv file, or xml file.</p>
+<p><a href="http://lh6.ggpht.com/_3gdMjuMkpX4/TVT-02i6S0I/AAAAAAAAA0M/ZhwHZ_SQiuM/s1600-h/image%5B17%5D.png"><img alt="image" border="0" height="356" src="{{ site.baseurl }}/assets/image_thumb%5B11%5D.png?imgmax=800" title="image" width="378" /></a></p>
+<p>The database option should be self explanatory.  It is like any other database connection, and the most popular option is to use a simple MS Access DB or SQL Express database that you can include with your project.</p>
+<p>The other two options are file based.  The CSV file will be explained in further detail below.  The main difference between a CSV and XML file is that you can have multiple test data sets in the XML file while only one set of data would be accessible for a CSV.  So, if you need to set up data for multiple tests, you would need to maintain multiple files with the CSV option.  In the XML option, you could just maintain one with multiple sections within the XML file.</p>
+<p>Select the CSV File option and click Next.</p>
+<p>5.  Select Your CSV File</p>
+<p>At this point, you will be presented with a dialog to select a CSV file.  Click on the (…) button and select the location of the text file that you created for your test.</p>
+<p><a href="http://lh6.ggpht.com/_3gdMjuMkpX4/TVT-1hsntAI/AAAAAAAAA0U/hbZuogtm908/s1600-h/image%5B40%5D.png"><img alt="image" border="0" height="401" src="{{ site.baseurl }}/assets/image_thumb%5B24%5D.png?imgmax=800" title="image" width="433" /></a></p>
+<p>Once selected, the dialog will show the contents of your CSV file as a data grid to allow you to examine the contents to make sure that the data is what you were expecting.</p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-2W9liFI/AAAAAAAAA0c/-cQFninilUE/s1600-h/image%5B70%5D.png"><img alt="image" border="0" height="381" src="{{ site.baseurl }}/assets/image_thumb%5B40%5D.png?imgmax=800" title="image" width="413" /></a></p>
+<p>Click the Finish button once you have confirmed the file contents.  You will notice that the properties have been updated to reflect the change.</p>
+<p><a href="http://lh5.ggpht.com/_3gdMjuMkpX4/TVT-29mBjJI/AAAAAAAAA0k/Em7c81PdO4U/s1600-h/image%5B49%5D.png"><img alt="image" border="0" height="225" src="{{ site.baseurl }}/assets/image_thumb%5B29%5D.png?imgmax=800" title="image" width="430" /></a></p>
+<p>In addition, Visual Studio will add a [DataSource] and [DeploymentItem] attributes to your original test method as shown below with the same information.  In the future, you can set these attributes up on a test without needing to use the Properties wizard for selecting a Data Source.</p>
+<div class="csharpcode">
+<pre class="alt">[DataSource(<span class="str">"Microsoft.VisualStudio.TestTools.DataSource.CSV"</span>, <span class="str">"|DataDirectory|TestData.csv"</span>, <span class="str">"TestData#csv"</span>, DataAccessMethod.Sequential), DeploymentItem(<span class="str">"Demo.DataDrivenTestsTestData.csv"</span>), DeploymentItem(<span class="str">"TestData.csv"</span>), TestMethod]</pre>
+<pre><span class="kwrd">public</span> <span class="kwrd">void</span> Add_when_two_numbers_returns_proper_result()</pre>
+<pre class="alt">{</pre>
+<pre></pre>
+<pre class="alt">}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre { font-size: small; color: black; font-family: consolas, "Courier New", courier, monospace; background-color: #ffffff; /*white-space: pre;*/ } .csharpcode pre { margin: 0em; } .csharpcode .rem { color: #008000; } .csharpcode .kwrd { color: #0000ff; } .csharpcode .str { color: #006080; } .csharpcode .op { color: #0000c0; } .csharpcode .preproc { color: #cc6633; } .csharpcode .asp { background-color: #ffff00; } .csharpcode .html { color: #800000; } .csharpcode .attr { color: #ff0000; } .csharpcode .alt  { background-color: #f4f4f4; width: 100%; margin: 0em; } .csharpcode .lnum { color: #606060; } </p>
+<p>6.  Add Code to Reference Data Source</p>
+<p>Once you have added your test data to the test method, you will want to access it within the body of your unit test method.  This can be done by referencing the DataRow property of the TestContext class-level variable.  I have created a simple test to use the values to assert that the Add method of a simple Calculator class works as shown below.  Because a DataRow column returns an object, you will need to do some casting to the appropriate data types.</p>
+<div class="csharpcode">
+<pre class="alt">[DeploymentItem(<span class="str">"Demo.DataDrivenTestsTestData.csv"</span>), DeploymentItem(<span class="str">"TestData.csv"</span>), DataSource(<span class="str">"Microsoft.VisualStudio.TestTools.DataSource.CSV"</span>, <span class="str">"|DataDirectory|TestData.csv"</span>, <span class="str">"TestData#csv"</span>, DataAccessMethod.Sequential), TestMethod]</pre>
+<pre><span class="kwrd">public</span> <span class="kwrd">void</span> Add_when_two_numbers_returns_proper_result()</pre>
+<pre class="alt">{</pre>
+<pre><span class="rem">//arrange</span></pre>
+<pre class="alt">var operand1 = System.Convert.ToInt32(TestContext.DataRow[<span class="str">"Operand1"</span>]);</pre>
+<pre>var operand2 = System.Convert.ToInt32(TestContext.DataRow[<span class="str">"Operand2"</span>]);</pre>
+<pre class="alt"></pre>
+<pre>var sut = <span class="kwrd">new</span> Calculator();</pre>
+<pre class="alt"> </pre>
+<pre><span class="rem">//act</span></pre>
+<pre class="alt">var result = sut.Add(operand1, operand2);</pre>
+<pre> </pre>
+<pre class="alt"><span class="rem">//assert</span></pre>
+<pre>var expectedValue = System.Convert.ToInt32(TestContext.DataRow[<span class="str">"ExpectedValue"</span>]);</pre>
+<pre class="alt"></pre>
+<pre>Assert.AreEqual(expectedValue, result);</pre>
+<pre class="alt">}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre { font-size: small; color: black; font-family: consolas, "Courier New", courier, monospace; background-color: #ffffff; /*white-space: pre;*/ } .csharpcode pre { margin: 0em; } .csharpcode .rem { color: #008000; } .csharpcode .kwrd { color: #0000ff; } .csharpcode .str { color: #006080; } .csharpcode .op { color: #0000c0; } .csharpcode .preproc { color: #cc6633; } .csharpcode .asp { background-color: #ffff00; } .csharpcode .html { color: #800000; } .csharpcode .attr { color: #ff0000; } .csharpcode .alt  { background-color: #f4f4f4; width: 100%; margin: 0em; } .csharpcode .lnum { color: #606060; } </p>
+<p>7.  Run the Test</p>
+<p>You can run the test as you would any other in MS Test.  The result will look similar to other tests.</p>
+<p><a href="http://lh5.ggpht.com/_3gdMjuMkpX4/TVT-3nFWkrI/AAAAAAAAA0s/18Wy09qAbVE/s1600-h/image%5B53%5D.png"><img alt="image" border="0" height="128" src="{{ site.baseurl }}/assets/image_thumb%5B31%5D.png?imgmax=800" title="image" width="380" /></a></p>
+<p>However, if you right-click on the result row in the Test Results pane, and select View Test Results Details as shown below…</p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-4ZmlLHI/AAAAAAAAA04/Q0OADe9ZlyA/s1600-h/image%5B57%5D.png"><img alt="image" border="0" height="242" src="{{ site.baseurl }}/assets/image_thumb%5B33%5D.png?imgmax=800" title="image" width="356" /></a></p>
+<p>…you will see the detail of the results to see which data combinations failed and why.</p>
+<p><a href="http://lh3.ggpht.com/_3gdMjuMkpX4/TVT-4zuDzDI/AAAAAAAAA1A/E-62RPHM_sc/s1600-h/image%5B62%5D.png"><img alt="image" border="0" height="238" src="{{ site.baseurl }}/assets/image_thumb%5B36%5D.png?imgmax=800" title="image" width="397" /></a></p>
+<p>Hope this helps someone else out there.
+<div class="blogger-post-footer">
+<div>
+<br />
+<span style="border-top:solid 1px #000000;"><br />
+<span style="text-align:left;"><br />
+Todd Meinershagen is a Principal Consultant with </span><a href="http://www.improvingenterprises.com/" style="text-align:left;">Improving Enterprises</a><span style="text-align:left;"> in Dallas, Texas.</span><br />
+</span><br />
+
+</div>
+</div>

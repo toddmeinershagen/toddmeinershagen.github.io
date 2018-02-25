@@ -1,0 +1,33 @@
+---
+layout: post
+title: Get Your AOP
+date: 
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  blogger_blog: toddmeinershagen.blogspot.com
+  blogger_author: Todd Meinershagen
+  blogger_afd108f81ae242501ffa65d49d9298e0_permalink: '1068063308814581951'
+author:
+  login: tmeinershagen
+  email: todd@meinershagen.net
+  display_name: Todd Meinershagen
+  first_name: ''
+  last_name: ''
+---
+<div>Are you a development lead or application architect or a member of a self-organizing team? </p>
+<p>If so, you have probably been responsible for reviewing other developer's code and making sure that  coding standards, especially infrastructure-type concerns, are followed in a consistent manner.  These can include things like security, logging, tracing, auditing, transaction management, threading, etc.</p>
+<p>For instance, your team's standards may dictate that every method needs to log at the beginning, ending, and after exceptions during the course of a given method execution.  This might look like so:
+<div></div>
+</div>
+<div>  </div>
+<p>Notice that the developer needs to make sure that they call the Debug method of the Logger at the beginning and end of each method.  This is in contrast to calling the Error method of the Logger in the event of an exception.  In addition, they need to make sure to get the messages that are sent in a consistent format. </p>
+<p>This can be a daunting task, and will usually end up not being followed throughout the code base if each member of the team is not diligent to review every part of the code.</p>
+<p>In these situations, it might be possible to encapsulate this logic in a decorative method that accepts a lambda like so:</p>
+<p>This seems to help, but it still requires each developer to be diligent to include the call to the decorative method, and they will have a more difficult time debugging their code now that it is encapsulated in an action that is called from the decorative method.  Another problem will occur once multiple of these types of concerns needs to be added to the code.</p>
+<hr /><span style="text-align:left;">Todd Meinershagen is a Principal with </span><a href="http://improvingenterprises.com/" style="text-align:left;">Improving Enterprises</a><span style="text-align:left;"> in Dallas, Texas.</span></p>

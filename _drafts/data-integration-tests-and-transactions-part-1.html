@@ -1,0 +1,73 @@
+---
+layout: post
+title: Data Integration Tests and Transactions - Part 1
+date: 
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories:
+- testing
+tags: []
+meta:
+  blogger_blog: toddmeinershagen.blogspot.com
+  blogger_author: Todd Meinershagen
+  blogger_afd108f81ae242501ffa65d49d9298e0_permalink: '5922353542288677497'
+  _publicize_job_id: '11181715587'
+  geo_public: '0'
+  _edit_last: '2295558'
+author:
+  login: tmeinershagen
+  email: todd@meinershagen.net
+  display_name: Todd Meinershagen
+  first_name: ''
+  last_name: ''
+---
+<p>I have been writing some integration tests in .NET lately to specify behavior for my data layer. The issue that always comes up is how to make sure that each test is completely isolated from other tests. This requires each test to initialize needed data and at the end to clean up any data that was created so that other tests are not impacted by it. In the past I have set up compensating queries to delete that same data on tear down.</p>
+<p>This can create one of two problems:</p>
+<ul>
+<li><strong>maintainability</strong> - it is hard to maintain this logic going forward</li>
+<li><strong>reliability</strong> - it doesn’t guarantee successful rollback of the initial inserts because the query could possibly fail leaving the tests in a position for unsuccessful future tests against the database</li>
+</ul>
+<p>So, what do you do?</p>
+<p>I have been using the handy <a href="http://msdn.microsoft.com/en-us/library/system.transactions.transactionscope.aspx">TransactionScope</a> class to allow any connections to participate in the ambient transaction and then dispose of the transaction without committing on tear down of the fixture.</p>
+<p>In the example below, I have used NUnit, but this could work with other testing frameworks quite well.</p>
+<pre><code>[TestFixture]
+public class MyFixture
+{
+    private TransactionScope _scope;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _scope = new TransactionScope();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _scope.Dispose();
+    }
+
+    ///This is a silly sample test for display purposes only.
+    [Test]
+    public void given_context_when_something_happens_should_have_expected_outcome()
+    {
+        ExecuteSomeLogicForInsertingDataForContext();
+
+        RunSomeActionToMakeSomethingHappen();
+
+        AssertThatSomeExpectedOutcomeOccured();
+    }
+}
+</code></pre>
+<p>You could make this an abstract base class and make the SetUp and TearDown methods virtual if you would like to reuse this across any of your data test fixtures. As long as you don’t call _scope.Complete() the changes you have made should be rolled back/aborted on the disposal of the transaction.</p>
+<p>Hope this helps!</p>
+<div class="blogger-post-footer">
+<div>
+<span style="border-top:solid 1px #000000;"><br />
+<span style="text-align:left;"><br />
+Todd Meinershagen is a Principal Consultant with </span><a style="text-align:left;" href="http://www.improvingenterprises.com/">Improving Enterprises</a><span style="text-align:left;"> in Dallas, Texas.</span><br />
+</span></div>
+</div>

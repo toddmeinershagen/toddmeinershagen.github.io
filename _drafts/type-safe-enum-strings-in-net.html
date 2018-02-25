@@ -1,0 +1,206 @@
+---
+layout: post
+title: Type-Safe Enum Strings in .NET
+date: 
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags:
+- craftsmanship
+meta:
+  _publicize_job_id: '28688082028'
+  _edit_last: '2295558'
+  geo_public: '0'
+  _wpcom_is_markdown: '1'
+author:
+  login: tmeinershagen
+  email: todd@meinershagen.net
+  display_name: Todd Meinershagen
+  first_name: ''
+  last_name: ''
+---
+<p>One thing that has always bothered me in .NET is the inability to create a type-safe set of string constants like an Enum. I would like to create a type such as the following:</p>
+<p>[code lang=csharp]<br />
+public enum StoredProcedure : string<br />
+{<br />
+   DeleteConsumer = DeleteConsumer,<br />
+   EditConsumer = EditConsumer,<br />
+   GetConsumer = GetConsumer<br />
+}<br />
+[/code]</p>
+<p>This would be incredibly useful for those situations where you are passing constant strings to a given method and you would like to limit the parameter that is passed in to a finite set of options that can be detected through a type-safe check during compile time.</p>
+<p>[code lang=csharp]<br />
+public void ExecuteDataSet(StoredProcedures storedProcedure)<br />
+{<br />
+   SqlCommand command = new SqlCommand();<br />
+   command.CommandType = CommandType.StoredProcedure;<br />
+   command.CommandText = storedProcedure.ToString();<br />
+}<br />
+[/code]</p>
+<p>Unfortunately, a simple constant does not provide type-safe protection for the method call. If a developer is not aware of the pattern, they may end up sending in a literal string of their choosing. So, instead you end up with the following:</p>
+<p>[code lang=csharp]<br />
+public void ExecuteDataSet(string storedProcedure)<br />
+{<br />
+   SqlCommand command = new SqlCommand();<br />
+   command.CommandType = CommandType.StoredProcedure;<br />
+   command.CommandText = storedProcedure.ToString();<br />
+}<br />
+[/code]</p>
+<p>After working at a heterogeneous shop, I learned that Java has been creating their own type-safe string Enum classes for solving this situation for years before the formal Enum type was added to the 1.5 release of the Java Runtime.</p>
+<p>The example below shows how a typical Java developer would implement this concept in Java syntax.</p>
+<p>[code lang=java]<br />
+public final class Color {  </p>
+<p>    private String name;  </p>
+<p>    private Color(String name) {<br />
+        this.name = name;<br />
+    }  </p>
+<p>    public String toString() {<br />
+        return this.name;<br />
+ }  </p>
+<p> public static final Color Red = new Color(&quot;Red&quot;);<br />
+ public static final Color Green = new Color(&quot;Green&quot;);<br />
+ public static final Color Blue = new Color(&quot;Blue&quot;);<br />
+}<br />
+[/code]</p>
+<p>The basic idea is simple:</p>
+<ol>
+<li>Define a class representing a single element of the enumerated type</li>
+<li>
+<p>Don't provide any public constructors for it.</p>
+</li>
+<li>
+<p>Provide public static final fields, one for each constant in the enumerated type.</p>
+</li>
+</ol>
+<p>Because there is no way for clients to create objects of the type, there will never be any objects of the type besides those exported via the public static final fields.</p>
+<p>In order to make this easier to use within .NET, I created an abstract base type, <code>StringConstant</code>, that allows a developer to quickly create the functionality above plus some other goodies such as <code>CompareTo()</code>, <code>Equals()</code>, <code>GetHashCode()</code>, and the == and != operators for comparison to string literals.</p>
+<p>In order to use the code, you merely define your class as follows:</p>
+<p>[code lang=csharp]<br />
+namespace Shared<br />
+{<br />
+    public class StoredProcedures : StringConstant<br />
+    {<br />
+        public static readonly StoredProcedures GetConsumer = new StoredProcedures(&quot;GetConsumer&quot;);<br />
+        public static readonly StoredProcedures EditConsumer = new StoredProcedures(&quot;EditConsumer&quot;);<br />
+        public static readonly StoredProcedures DeleteConsumer = new StoredProcedures(&quot;DeleteConsumer&quot;);  </p>
+<p>        private StoredProcedures(name) : base(name){}<br />
+    }<br />
+}<br />
+[/code]</p>
+<p>The only part that does not work (this is the same for the Java version) is that it cannot be used in switch...case statements. Those require the use of an underlying integral type which is not present. Instead, you should use the if...else if construct to perform the same logic.</p>
+<p>Below is the code for the base class for StringConstant.</p>
+<p>[code lang=csharp]<br />
+using System;<br />
+using System.Collections;<br />
+using System.Reflection;</p>
+<p>namespace Shared<br />
+{<br />
+    public abstract class StringConstant : IComparable<br />
+    {<br />
+        private readonly string _value;</p>
+<p>        protected StringConstant()<br />
+        {<br />
+        }</p>
+<p>        protected StringConstant(string value)<br />
+        {<br />
+            _value = value;<br />
+        }</p>
+<p>        public string Value<br />
+        {<br />
+            get { return _value; }<br />
+        }</p>
+<p>        public override string ToString()<br />
+        {<br />
+            return Value;<br />
+        }</p>
+<p>        public override bool Equals(object obj)<br />
+        {<br />
+            var otherValue = obj as StringConstant;</p>
+<p>            if (otherValue == null)<br />
+            {<br />
+                return false;<br />
+            }</p>
+<p>            var typeMatches = GetType().Equals(obj.GetType());<br />
+            var valueMatches = _value.Equals(otherValue.Value);</p>
+<p>            return typeMatches &amp;&amp; valueMatches;<br />
+        }</p>
+<p>        public override int GetHashCode()<br />
+        {<br />
+            return _value.GetHashCode();<br />
+        }</p>
+<p>        public virtual int CompareTo(object other)<br />
+        {<br />
+            return Value.CompareTo(((StringConstant)other).Value);<br />
+        }<br />
+    }<br />
+}<br />
+[/code]</p>
+<p>In addition to the class, you may use the following xunit tests to explore my assumptions on its use.</p>
+<p><strong>Note:</strong> These tests require the <a href="https://www.nuget.org/packages/xunit/">xunit</a> and the <a href="https://www.nuget.org/packages/FluentAssertions/">FluentAssertions</a> libraries to run properly.</p>
+<p>[code lang=csharp]<br />
+using FluentAssertions;<br />
+using Shared;<br />
+using Xunit;</p>
+<p>namespace Tests<br />
+{<br />
+    public class StringConstantTests<br />
+    {<br />
+        [Fact]<br />
+        public void GIVEN_instance_WHEN_getting_value_THEN_returns_value()<br />
+        {<br />
+            StoredProcedures.EditConsumer.Value.Should().Be(&quot;EditConsumer&quot;);<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_to_stringing_THEN_returns_value()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.ToString().Should().Be(&quot;DeleteConsumer&quot;);<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_comparing_with_an_equal_instance_THEN_returns_0()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.CompareTo(StoredProcedures.DeleteConsumer).Should().Be(0);<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_comparing_with_a_non_equal_instance_THEN_return_negative_1()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.CompareTo(StoredProcedures.EditConsumer).Should().Be(-1);<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_checking_if_equal_to_an_equal_instance_THEN_returns_true()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.Equals(StoredProcedures.DeleteConsumer).Should().BeTrue();<br />
+            (StoredProcedures.GetConsumer == StoredProcedures.GetConsumer).Should().BeTrue();<br />
+            (StoredProcedures.GetConsumer != StoredProcedures.DeleteConsumer).Should().BeTrue();<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_checking_if_equal_to_a_non_equal_instance_THEN_returns_false()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.Equals(StoredProcedures.EditConsumer).Should().BeFalse();<br />
+            (StoredProcedures.GetConsumer == StoredProcedures.EditConsumer).Should().BeFalse();<br />
+            (StoredProcedures.GetConsumer != StoredProcedures.GetConsumer).Should().BeFalse();<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_enum_type_WHEN_getting_names_THEN_returns_every_instance()<br />
+        {<br />
+            var items = StringConstant.GetNames(typeof(StoredProcedures));<br />
+            items.Should().Contain(StoredProcedures.DeleteConsumer);<br />
+            items.Should().Contain(StoredProcedures.EditConsumer);<br />
+            items.Should().Contain(StoredProcedures.GetConsumer);<br />
+        }</p>
+<p>        [Fact]<br />
+        public void GIVEN_instance_WHEN_getting_hashcode_THEN_return_hash_of_value()<br />
+        {<br />
+            StoredProcedures.DeleteConsumer.GetHashCode().Should().Be(&quot;DeleteConsumer&quot;.GetHashCode());<br />
+            StoredProcedures.EditConsumer.GetHashCode().Should().Be(&quot;EditConsumer&quot;.GetHashCode());<br />
+            StoredProcedures.GetConsumer.GetHashCode().Should().Be(&quot;GetConsumer&quot;.GetHashCode());<br />
+        }<br />
+    }<br />
+}<br />
+[/code]</p>
+<blockquote><p>
+  <strong>Update:</strong>  Jimmy Bogard has <a href="https://lostechies.com/jimmybogard/2008/08/12/enumeration-classes/">an excellent description</a> of this same concept and more complete base class for Enumeration that you might want to leverage in your own code.
+</p></blockquote>
+<p>I hope this helps someone out there...</p>

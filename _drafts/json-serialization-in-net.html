@@ -1,0 +1,42 @@
+---
+layout: post
+title: JSON Serialization in .NET
+date: 
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories:
+- ".net"
+- json
+- serialization
+tags: []
+meta:
+  blogger_blog: toddmeinershagen.blogspot.com
+  blogger_author: Todd Meinershagen
+  blogger_afd108f81ae242501ffa65d49d9298e0_permalink: '8164876788885792768'
+  _publicize_job_id: '11181716073'
+author:
+  login: tmeinershagen
+  email: todd@meinershagen.net
+  display_name: Todd Meinershagen
+  first_name: ''
+  last_name: ''
+---
+<p>Many of you may be familiar with the use of JSON (JavaScript Object Notation).  It is a very tight syntax for expressing the state of an object and is very widely used in Web 2.0/AJAX style development in which objects are passed back and forth between the client using the XmlHttpRequest object out of band to eliminate the need to do a full page refresh.</p>
+<p>I found a great article by Rick Strahl that outlines the pros/cons of two built-in .NET serializers:  JavaScriptSerializer and DataContractJsonSerializer.  You can read about them <a href="http://west-wind.net/Weblog/ShowPost.aspx?id=442969" target="_blank">here</a>.</p>
+<p>After using both methods in my own application, I found that another con of the JavaScriptSerializer that is a pro for the DataContractJsonSerializer class is that it requires a public default, parameter-less constructor.  This means that I cannot serialize objects that I also would like to make read-only, and therefore, requires a constructor with the properties defined up front.</p>
+<p>One point I wanted to make in this post was that the extension class that Rick defines in his post for simplifying DataContractJsonSerializer usage does not work properly.  In order to correct it, I added the 'this' keyword to the first parameter so that .NET recognized the static methods as extensions to the object type.  In addition, I converted the FromJsonString() method to a generic FromJsonString() method to allow the return object to be strongly typed.  </p>
+<p>Code is listed below, if you are interested.</p>
+<p> <a href="http://lh3.ggpht.com/_3gdMjuMkpX4/Sei4_iG8_8I/AAAAAAAAAio/aR2w9YY3VZ4/image%5B12%5D.png"><img alt="image" src="{{ site.baseurl }}/assets/image_thumb%5B10%5D.png" border="0" height="441" width="473" /></a>
+<div class="blogger-post-footer">
+<div>
+<br />
+<span style="border-top:solid 1px #000000;"><br />
+<span style="text-align:left;"><br />
+Todd Meinershagen is a Principal Consultant with </span><a href="http://www.improvingenterprises.com/" style="text-align:left;">Improving Enterprises</a><span style="text-align:left;"> in Dallas, Texas.</span><br />
+</span><br />
+
+</div>
+</div>
