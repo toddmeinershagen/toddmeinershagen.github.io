@@ -22,6 +22,27 @@
     </item>
     
     <item>
+      <title></title>
+      <link>https://blog.toddmeinershagen.com/presentations/specbyexampleforuiautomation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.toddmeinershagen.com/presentations/specbyexampleforuiautomation/</guid>
+      <description>function detectBrowser() { /* var fallback = true; if (navigator &amp;&amp; navigator.vendor) { if (navigator.vendor.search(&#34;Apple&#34;) != -1) { var vers = parseInt(navigator.appVersion.replace(/^.*?AppleWebKit\/(\d+).*?$/,&#39;$1&#39;),0); if (vers = 532) { fallback = false; } } } var slashIndex = window.location.href.lastIndexOf(&#34;/&#34;); var cropped = window.location.href.slice(0,slashIndex+1); if (fallback) { window.location.replace( cropped + &#34;assets/fallback/index.html&#34; ); } else { window.location.replace( cropped + &#34;assets/player/KeynoteDHTMLPlayer.html&#34; ); } */ var slashIndex = window.location.href.lastIndexOf(&#34;/&#34;); var cropped = window.location.href.slice(0,slashIndex+1); window.location.replace(cropped + &#34;</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://blog.toddmeinershagen.com/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.toddmeinershagen.com/resume/</guid>
+      <description>TODD A. MEINERSHAGEN 1850 Countryside Dr., Frisco, TX 75034 Home 972.712.2771 • Cellular 972.343.8652 todd@meinershagen.net
+
+SUMMARY OF QUALIFICATIONS
+ Accomplished architect with 17+ years of in-depth, hands-on experience designing and developing service-oriented, n-tier applications to solve business problems. Diverse certifications  MCSD.NET Profession Scrum Master I MongoDB for Node.JS Developers and DBAs Certificate for Java Development  Team player with a consistent history of &amp;ldquo;Far Exceeds&amp;rdquo; rating for end of year reviews.</description>
+    </item>
+    
+    <item>
       <title>About</title>
       <link>https://blog.toddmeinershagen.com/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
