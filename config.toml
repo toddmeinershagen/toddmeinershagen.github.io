@@ -5,6 +5,7 @@ copyright = "&copy; 2017. All rights reserved."
 canonifyurls = true
 paginate = 10
 theme = "blackburn"
+publishDir = "docs"
 
 [indexes]
   tag = "tags"
