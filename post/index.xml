@@ -21,5 +21,14 @@
  Helps me to catch potential bugs early Helps me to clarify the behavior of my units (classes) from a client perspective Leaves a documentation trail for those that come behind me to understand my intentions  The only irritation/friction I have found in the past is the fact that running unit tests has required me to manually run them on a periodic basis.</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://blog.toddmeinershagen.com/post/template/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.toddmeinershagen.com/post/template/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

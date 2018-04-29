@@ -8,7 +8,7 @@
   </url>
   
   <url>
-    <loc>https://blog.toddmeinershagen.com/resume/</loc>
+    <loc>https://blog.toddmeinershagen.com/post/template/</loc>
   </url>
   
   <url>
@@ -19,6 +19,10 @@
     <loc>https://blog.toddmeinershagen.com/post/</loc>
     <lastmod>2017-03-10T18:13:30-06:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.toddmeinershagen.com/resume/</loc>
   </url>
   
   <url>
