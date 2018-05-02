@@ -22,6 +22,16 @@
     </item>
     
     <item>
+      <title>Type-Safe Enum Strings in .NET</title>
+      <link>https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/</link>
+      <pubDate>Fri, 10 Mar 2017 18:13:30 -0600</pubDate>
+      
+      <guid>https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/</guid>
+      <description>One thing that has always bothered me in .NET is the inability to create a type-safe set of string constants like an enum. I would like to create a type such as the following:
+public enum StoredProcedure : string { DeleteConsumer = &amp;quot;DeleteConsumer&amp;quot;, EditConsumer = &amp;quot;EditConsumer&amp;quot;, GetConsumer = &amp;quot;GetConsumer&amp;quot; }  This would be incredibly useful for those situations where you are passing constant strings to a given method and you would like to limit the options that are passed to a finite set of options that can be detected through a type-safe check during compile time.</description>
+    </item>
+    
+    <item>
       <title></title>
       <link>https://blog.toddmeinershagen.com/post/template/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

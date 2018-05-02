@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.37" />
 
-  <title>Tags &middot; Todd&#39;s Thoughts</title>
+  <title>Enum &middot; Todd&#39;s Thoughts</title>
 
   
   
@@ -37,7 +37,7 @@
 
   
   
-  <link rel="alternate" type="application/rss+xml" title="Todd&#39;s Thoughts" href="https://blog.toddmeinershagen.com/tags/index.xml" />
+  <link rel="alternate" type="application/rss+xml" title="Todd&#39;s Thoughts" href="https://blog.toddmeinershagen.com/tags/enum/index.xml" />
   
 
   
@@ -106,7 +106,7 @@
 
     
     <li class="pure-menu-item">
-      <a class="pure-menu-link" href="https://blog.toddmeinershagen.com/tags/index.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      <a class="pure-menu-link" href="https://blog.toddmeinershagen.com/tags/enum/index.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
     </li>
     
 
@@ -231,28 +231,65 @@
 
 
 <div class="header">
-  <h1>Tags</h1>
+  <h1>Enum</h1>
 </div>
+
 <div class="content">
-  <ul>
+  
+    <article>
+  <header>
+    <h2><a href="https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/">Type-Safe Enum Strings in .NET</a></h2>
+
+    <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>Friday, March 10, 2017</time>
+  </div>
+
+  
+
   
   
-    <li>
-      <a href="enum">enum</a>
-      <span>&#40;1&#41;</span>
-    </li>
   
-    <li>
-      <a href="testing">testing</a>
-      <span>&#40;1&#41;</span>
-    </li>
+  <div>
+    <i class="fa fa-folder fa-fw"></i>
+    
+      <a class="post-taxonomy-topic" href="https://blog.toddmeinershagen.com/topics/technical">technical</a>
+    
+  </div>
   
-    <li>
-      <a href="visual-studio">visual-studio</a>
-      <span>&#40;1&#41;</span>
-    </li>
   
-  </ul>
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://blog.toddmeinershagen.com/tags/enum">enum</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  </header>
+
+  <p>
+  One thing that has always bothered me in .NET is the inability to create a type-safe set of string constants like an enum. I would like to create a type such as the following:
+public enum StoredProcedure : string { DeleteConsumer = &quot;DeleteConsumer&quot;, EditConsumer = &quot;EditConsumer&quot;, GetConsumer = &quot;GetConsumer&quot; }  This would be incredibly useful for those situations where you are passing constant strings to a given method and you would like to limit the options that are passed to a finite set of options that can be detected through a type-safe check during compile time.
+  </p>
+
+  
+  <footer>
+    <a href="https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/">Read more<i class="fa fa-angle-double-right fa-fw"></i></a>
+  </footer>
+  
+</article>
+
+  
 </div>
 
 </div>

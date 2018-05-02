@@ -8,11 +8,22 @@
   </url>
   
   <url>
+    <loc>https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/</loc>
+    <lastmod>2017-03-10T18:13:30-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.toddmeinershagen.com/post/template/</loc>
   </url>
   
   <url>
     <loc>https://blog.toddmeinershagen.com/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://blog.toddmeinershagen.com/tags/enum/</loc>
+    <lastmod>2017-03-10T18:13:30-06:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -27,6 +38,7 @@
   
   <url>
     <loc>https://blog.toddmeinershagen.com/tags/</loc>
+    <lastmod>2017-03-10T18:13:30-06:00</lastmod>
     <priority>0</priority>
   </url>
   

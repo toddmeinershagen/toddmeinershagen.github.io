@@ -4,10 +4,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="This is it.">
+  <meta name="description" content="">
   <meta name="generator" content="Hugo 0.37" />
 
-  <title>Live Unit Testing in Visual Studio 2017 &middot; Todd&#39;s Thoughts</title>
+  <title>Type-Safe Enum Strings in .NET &middot; Todd&#39;s Thoughts</title>
 
   
   
@@ -225,8 +225,8 @@
 
 
 <div class="header">
-  <h1>Live Unit Testing in Visual Studio 2017</h1>
-  <h2>This is it.</h2>
+  <h1>Type-Safe Enum Strings in .NET</h1>
+  <h2></h2>
 </div>
 <div class="content">
 
@@ -257,9 +257,7 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="https://blog.toddmeinershagen.com/tags/testing">testing</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://blog.toddmeinershagen.com/tags/visual-studio">visual studio</a>
+      <a class="post-taxonomy-tag" href="https://blog.toddmeinershagen.com/tags/enum">enum</a>
     
   </div>
   
@@ -267,34 +265,103 @@
 
 </div>
 
-  <p>I am a big proponent of unit testing my code because of the many benefits it provides:</p>
+  <p>One thing that has always bothered me in .NET is the inability to create a type-safe set of string constants like an enum. I would like to create a type such as the following:</p>
 
-<ul>
-<li>Helps me to catch potential bugs early</li>
-<li>Helps me to clarify the behavior of my units (classes) from a client perspective</li>
-<li>Leaves a documentation trail for those that come behind me to understand my intentions</li>
-</ul>
+<pre><code class="language-csharp">public enum StoredProcedure : string
+{
+   DeleteConsumer = &quot;DeleteConsumer&quot;,
+   EditConsumer = &quot;EditConsumer&quot;,
+   GetConsumer = &quot;GetConsumer&quot;
+}
+</code></pre>
 
-<p>The only irritation/friction I have found in the past is the fact that running unit tests has required me to manually run them on a periodic basis. Having keyboard shortcuts has helped to make that fairly painless, but it would have been nice to have the tests automatically run as I am working on the code. That way I am continually receiving feedback and don&rsquo;t have to explicitly do anything to receive it.</p>
+<p>This would be incredibly useful for those situations where you are passing constant strings to a given method and you would like to limit the options that are passed to a finite set of options that can be detected through a type-safe check during compile time.</p>
 
-<p>While there have been custom add-on options in the past (<a href="https://www.nuget.org/packages/specwatchr/">SpecWatchr</a> and <a href="http://www.ncrunch.net/">nCrunch</a>), Microsoft has finally seen fit to add this functionality right into the Visual Studio 2017 Enterprise version.</p>
+<pre><code class="language-csharp">public void ExecuteDataSet(StoredProcedures storedProcedure)
+{
+   SqlCommand command = new SqlCommand();
+   command.CommandType = CommandType.StoredProcedure;
+   command.CommandText = storedProcedure.ToString();
+}
+</code></pre>
 
-<p>Find out more about it <a href="https://blogs.msdn.microsoft.com/visualstudio/2017/03/09/live-unit-testing-in-visual-studio-2017-enterprise/">here</a> on Microsoft&rsquo;s Visual Studio Blog.</p>
+<p>Unfortunately, a simple constant does not provide type-safe protection for the method call. If a developer is not aware of the pattern, they may end up sending in a literal string of their choosing. So, instead you end up with the following:</p>
 
-<p><img src="https://cloud.githubusercontent.com/assets/177508/23807073/e6a6a618-0589-11e7-851e-8a96c230c9ec.png" alt="Live Unit Test Screenshot" /></p>
+<pre><code class="language-csharp">public void ExecuteDataSet(string storedProcedure)
+{
+   SqlCommand command = new SqlCommand();
+   command.CommandType = CommandType.StoredProcedure;
+   command.CommandText = storedProcedure.ToString();
+}
+</code></pre>
+
+<p>After working at a heterogeneous shop, I learned that Java has been creating their own type-safe string enum classes for solving this situation for years before the formal enum type was added to the 1.5 release of the Java Runtime.</p>
+
+<p>The example below shows how a typical Java developer would implement this concept in Java syntax.</p>
+
+<pre><code class="language-csharp">public final class Color {
+
+ private String name;
+
+ private Color(String name) {
+   this.name = name;
+ }
+
+ public String toString() {
+   return this.id;
+ }
+
+ public static final Color RED = new Color(&quot;Red&quot;);
+ public static final Color GREEN = new Color(&quot;Green&quot;);
+ public static final Color BLUE = new Color(&quot;Blue&quot;);
+} 
+</code></pre>
+
+<p>The basic idea is simple:</p>
+
+<ol>
+<li><p>Define a class representing a single element of the enumerated type</p></li>
+
+<li><p>Don&rsquo;t provide any public constructors for it.</p></li>
+
+<li><p>Provide public static final fields, one for each constant in the enumerated type.</p></li>
+</ol>
+
+<p>Because there is no way for clients to create objects of the type, there will never be any objects of the type besides those exported via the public static final fields.</p>
+
+<p>In order to make this easier to use within .NET, I create an abstract base type, StringConstantBase, that allows a developer to quickly create the functionality above plus some other goodies such as GetNames(), CompareTo(), Equals(), GetHashCode(), and the == and != operators for comparison to string literals.</p>
+
+<p>In order to use the code, you merely define your class as follows:</p>
+
+<pre><code class="language-csharp">public class StoredProcedures : StringConstantBase
+{
+   public static readonly StoredProcedures GetConsumer = new StoredProcedures(&quot;GetConsumer&quot;);
+   public static readonly StoredProcedures EditConsumer = new StoredProcedures(&quot;EditConsumer&quot;);
+   public static readonly StoredProcedures DeleteConsumer = new StoredProcedures(&quot;DeleteConsumer&quot;);
+
+   private StoredProcedures(string name) : base(name){}
+
+}
+</code></pre>
+
+<p>The only part that does not work (this is the same for the Java version) is that it cannot be used in switch&hellip;case statements. Those require the use of an underlying integral type which is not present. Instead, you should use the if&hellip;else if construct to perform the same logic.</p>
+
+<p>If you are interested in using the StringConstantBase class for your own code, you can download my Visual Studio 2008 project from here. In addition to the class, I have included a unit test project to include my assumptions on its use.</p>
+
+<p>I hope this helps someone out there&hellip;</p>
 
 
   
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/"><i class="fa fa-chevron-left"></i></a>
+    <a href="https://blog.toddmeinershagen.com/post/template/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="https://blog.toddmeinershagen.com/post/2008/08/18/type-safe-enum-strings-in-dotnet/">Type-Safe Enum Strings in .NET</a>
+      <a href="https://blog.toddmeinershagen.com/post/template/"></a>
     </nav>
     
   </div>
@@ -303,8 +370,14 @@
   </div>
   <div class="pure-u-10-24">
     
+    <nav class="next">
+      <a href="https://blog.toddmeinershagen.com/post/2017/03/10/live-unit-testing-in-visual-studio-2017/">Live Unit Testing in Visual Studio 2017</a>
+    </nav>
+    
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
+    
+    <a href="https://blog.toddmeinershagen.com/post/2017/03/10/live-unit-testing-in-visual-studio-2017/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
